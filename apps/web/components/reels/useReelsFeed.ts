@@ -7,6 +7,26 @@ import type { Reel, ReelsFeedState } from './types';
 
 const WINDOW_AHEAD = 2;   // precarga 2 videos posteriores
 const WINDOW_BEHIND = 1;  // mantiene 1 anterior en memoria
+const FOLLOWING_KEY = 'xshop-following-v1';
+
+function readFollowing(): Set<string> {
+  if (typeof window === 'undefined') return new Set();
+  try {
+    const value = JSON.parse(window.localStorage.getItem(FOLLOWING_KEY) || '[]');
+    return new Set(Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function writeFollowing(ids: Set<string>): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(FOLLOWING_KEY, JSON.stringify([...ids]));
+  } catch {
+    // El follow sigue funcionando si el navegador bloquea el almacenamiento.
+  }
+}
 
 export function useReelsFeed(reels: Reel[]) {
   const rankedReels = useMemo(() => rankReels(reels), [reels]);
@@ -16,6 +36,7 @@ export function useReelsFeed(reels: Reel[]) {
     status: reels.length ? 'ready' : 'loading',
     muted: true,
     likedIds: new Set(),
+    followingIds: new Set(),
     visibleComments: null,
     quickBuyReelId: null,
   });
@@ -23,6 +44,10 @@ export function useReelsFeed(reels: Reel[]) {
   useEffect(() => {
     setState((prev) => ({ ...prev, reels: rankedReels, activeIndex: 0 }));
   }, [rankedReels]);
+
+  useEffect(() => {
+    setState((prev) => ({ ...prev, followingIds: readFollowing() }));
+  }, []);
 
   useEffect(() => {
     const activeReel = state.reels[state.activeIndex];
@@ -94,6 +119,17 @@ export function useReelsFeed(reels: Reel[]) {
     });
   }, [state.likedIds]);
 
+  const toggleFollow = useCallback((sellerId: string) => {
+    setState((prev) => {
+      const followingIds = new Set(prev.followingIds);
+      const wasFollowing = followingIds.has(sellerId);
+      if (wasFollowing) followingIds.delete(sellerId);
+      else followingIds.add(sellerId);
+      writeFollowing(followingIds);
+      return { ...prev, followingIds };
+    });
+  }, []);
+
   const recordCompletion = useCallback((reelId: string) => {
     recordBehavior(reelId, 'complete', 1);
   }, []);
@@ -123,6 +159,7 @@ export function useReelsFeed(reels: Reel[]) {
     registerItem,
     isMounted,
     toggleLike,
+    toggleFollow,
     recordCompletion,
     toggleMute,
     openComments,

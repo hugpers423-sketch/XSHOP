@@ -56,6 +56,7 @@ export interface ReelsFeedState {
   status: ReelsFeedStatus;
   muted: boolean;
   likedIds: Set<string>;
+  followingIds: Set<string>;
   visibleComments: string | null;
   quickBuyReelId: string | null;
 }

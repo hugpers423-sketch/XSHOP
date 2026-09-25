@@ -95,6 +95,11 @@ export default function LivePage() {
   const [persistenceFailed, setPersistenceFailed] = useState(false);
 
   useEffect(() => {
+    const requestedId = new URLSearchParams(window.location.search).get('id');
+    if (requestedId) setActiveId(requestedId);
+  }, []);
+
+  useEffect(() => {
     let active = true;
     fetch('/api/lives', { cache: 'no-store' })
       .then(async (response) => {
@@ -181,7 +186,7 @@ export default function LivePage() {
             streamUrl={active.streamUrl}
             transport={active.transport}
             remoteStream={active.transport === 'livekit' ? liveKitViewer.remoteStream : webRtc.remoteStream}
-            onLike={() => { if (requireAuth()) like(); }}
+            onLike={() => { if (requireAuth('like')) like(); }}
           />
 
           {active.transport === 'livekit' && (

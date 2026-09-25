@@ -9,7 +9,7 @@ interface AuthContextValue {
   loading: boolean;
   refresh: () => Promise<void>;
   logout: () => Promise<void>;
-  requireAuth: () => boolean;
+  requireAuth: (reason?: 'like' | 'follow' | 'comment' | 'buy') => boolean;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -57,10 +57,11 @@ export function AuthProvider({
     router.refresh();
   }, [router]);
 
-  const requireAuth = useCallback(() => {
+  const requireAuth = useCallback((reason?: 'like' | 'follow' | 'comment' | 'buy') => {
     if (user) return true;
     const next = encodeURIComponent(pathname || '/');
-    router.push(`/login?next=${next}`);
+    const reasonQuery = reason ? `&reason=${encodeURIComponent(reason)}` : '';
+    router.push(`/login?next=${next}${reasonQuery}`);
     return false;
   }, [pathname, router, user]);
 

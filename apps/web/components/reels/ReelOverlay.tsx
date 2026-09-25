@@ -7,7 +7,9 @@ import type { Reel } from './types';
 interface ReelOverlayProps {
   reel: Reel;
   isLiked: boolean;
+  isFollowing: boolean;
   onToggleLike: () => void;
+  onToggleFollow: () => void;
   onOpenComments: () => void;
   onShare: () => void;
   onQuickBuy: () => void;
@@ -19,7 +21,7 @@ const formatCount = (n: number) =>
   : String(n);
 
 export function ReelOverlay({
-  reel, isLiked, onToggleLike, onOpenComments, onShare, onQuickBuy,
+  reel, isLiked, isFollowing, onToggleLike, onToggleFollow, onOpenComments, onShare, onQuickBuy,
 }: ReelOverlayProps) {
   return (
     <>
@@ -62,6 +64,15 @@ export function ReelOverlay({
             {reel.hashtags.map((t) => `#${t}`).join(' ')}
           </span>
         </p>
+
+        <button
+          type="button"
+          onClick={onToggleFollow}
+          aria-label={isFollowing ? `Dejar de seguir a ${reel.product.seller.username}` : `Seguir a ${reel.product.seller.username}`}
+          className={`mb-3 rounded-full border px-3 py-1.5 text-xs font-black transition ${isFollowing ? 'border-violet-300/60 bg-violet-400/20 text-violet-100' : 'border-white/25 bg-black/35 text-white hover:border-violet-300/70 hover:bg-violet-400/15'}`}
+        >
+          {isFollowing ? '✓ Siguiendo' : `+ Seguir a @${reel.product.seller.username}`}
+        </button>
 
         <AnimatePresence>
           <motion.button

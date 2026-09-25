@@ -2,6 +2,7 @@
 'use client';
 
 import { ReelItem } from './ReelItem';
+import { LiveNowRail } from './LiveNowRail';
 import { CommentsBubble } from './CommentsBubble';
 import { QuickBuySheet } from './QuickBuySheet';
 import { useReelsFeed } from './useReelsFeed';
@@ -38,6 +39,7 @@ export function ReelsFeed({ reels, onAddToCart }: ReelsFeedProps) {
 
   return (
     <>
+      <LiveNowRail />
       <main
         className="h-[100dvh] w-full snap-y snap-mandatory overflow-y-auto overscroll-y-contain"
         aria-label="Feed de videos de productos"
@@ -52,11 +54,13 @@ export function ReelsFeed({ reels, onAddToCart }: ReelsFeedProps) {
             isMounted={feed.isMounted(index)}
             muted={feed.muted}
             isLiked={feed.likedIds.has(reel.id)}
+            isFollowing={feed.followingIds.has(reel.product.seller.id)}
             registerItem={feed.registerItem}
-            onToggleLike={() => { if (requireAuth()) feed.toggleLike(reel.id); }}
-            onOpenComments={() => { if (requireAuth()) feed.openComments(reel.id); }}
+            onToggleLike={() => { if (requireAuth('like')) feed.toggleLike(reel.id); }}
+            onToggleFollow={() => { if (requireAuth('follow')) feed.toggleFollow(reel.product.seller.id); }}
+            onOpenComments={() => { if (requireAuth('comment')) feed.openComments(reel.id); }}
             onShare={() => handleShare(reel)}
-            onQuickBuy={() => { if (requireAuth()) feed.openQuickBuy(reel.id); }}
+            onQuickBuy={() => { if (requireAuth('buy')) feed.openQuickBuy(reel.id); }}
             onEnded={() => feed.recordCompletion(reel.id)}
           />
         ))}

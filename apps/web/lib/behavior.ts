@@ -6,7 +6,7 @@ const STORAGE_KEY = 'xshop-recommendation-events-v1';
 
 type BehaviorEvent = {
   reelId: string;
-  kind: 'view' | 'like' | 'complete' | 'share';
+  kind: 'view' | 'like' | 'complete' | 'share' | 'follow';
   value: number;
   at: number;
 };
@@ -41,7 +41,7 @@ export function getRecommendationScores(reelIds: string[]): Map<string, number> 
   const scores = new Map(reelIds.map((id) => [id, 0]));
   for (const event of readEvents()) {
     if (!scores.has(event.reelId)) continue;
-    const weight = event.kind === 'like' ? 4 : event.kind === 'complete' ? 3 : event.kind === 'share' ? 2 : 1;
+    const weight = event.kind === 'follow' ? 5 : event.kind === 'like' ? 4 : event.kind === 'complete' ? 3 : event.kind === 'share' ? 2 : 1;
     scores.set(event.reelId, (scores.get(event.reelId) || 0) + event.value * weight);
   }
   return scores;

@@ -82,6 +82,16 @@ function LoginForm() {
         {loading ? "Validando…" : "Entrar"}
       </button>
 
+      {params.get('reason') && (
+        <p className="rounded-xl border border-violet-300/25 bg-violet-400/10 px-3 py-2 text-center text-xs text-violet-100">
+          {params.get('reason') === 'follow'
+            ? 'Crea tu cuenta o inicia sesión para seguir a más vendedores.'
+            : params.get('reason') === 'like'
+              ? 'Inicia sesión para dar like y recibir recomendaciones.'
+              : 'Inicia sesión para interactuar con la comunidad.'}
+        </p>
+      )}
+
       <div className="relative my-1 flex items-center gap-3 text-[10px] uppercase tracking-widest text-white/30">
         <span className="h-px flex-1 bg-white/10" />
         o
@@ -103,7 +113,10 @@ function LoginForm() {
 
       <p className="text-center text-xs text-white/50">
         ¿Sin cuenta?{" "}
-        <Link href="/register" className="font-semibold text-[#FF2D75] hover:underline">
+        <Link
+          href={`/register?next=${encodeURIComponent(nextPath)}${params.get('reason') ? `&reason=${encodeURIComponent(params.get('reason') as string)}` : ''}`}
+          className="font-semibold text-[#FF2D75] hover:underline"
+        >
           Regístrate gratis
         </Link>
       </p>

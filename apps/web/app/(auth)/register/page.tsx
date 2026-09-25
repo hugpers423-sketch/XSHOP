@@ -29,8 +29,10 @@ export default function RegisterPage() {
       const res = await authRegister({ name, email, password, role });
       if (!res.ok) throw new Error(res.error || "No se pudo crear la cuenta");
       track("signup", { role });
-      // Orden post-login: la cuenta nueva cae en su hub de perfil
-      router.push("/profile");
+      const nextPath = typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('next') || '/profile'
+        : '/profile';
+      router.push(nextPath);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error inesperado");
