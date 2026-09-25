@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  allowedDevOrigins: ['127.0.0.1', 'localhost'],
+  allowedDevOrigins: ['127.0.0.1', 'localhost', 'crearsoft.taile07cfb.ts.net'],
 
   // Raíz del workspace explícita (evita detección errónea por lockfiles múltiples)
   outputFileTracingRoot: path.join(__dirname, '../../'),
