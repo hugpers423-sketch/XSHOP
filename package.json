@@ -1,0 +1,48 @@
+{
+  "name": "x-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "X-SHOP — Social Commerce inmersivo para Perú",
+  "workspaces": [
+    "backend",
+    "apps/*"
+  ],
+  "scripts": {
+    "frontend": "pnpm --filter @xstore/web dev",
+    "frontend:legacy": "node serve.mjs",
+    "backend": "npm --prefix backend run dev",
+    "dev": "pnpm run frontend",
+    "web:build": "pnpm --filter @xstore/web build",
+    "web:typecheck": "pnpm --filter @xstore/web typecheck",
+    "build": "pnpm run web:build",
+    "build:capacitor": "node scripts/build-capacitor.js",
+    "lint": "eslint src/",
+    "db:seed": "npm --prefix backend run db:seed",
+    "db:seed:production": "node prisma/seed.mjs",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:deploy": "prisma migrate deploy",
+    "db:status": "prisma migrate status",
+    "validate:production": "node scripts/validate-production-env.mjs",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@prisma/client": "^6.19.3",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.0",
+    "prisma": "^6.3.0",
+    "turbo": "^2.3.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "dependencies": {
+    "bcryptjs": "^3.0.3"
+  }
+}

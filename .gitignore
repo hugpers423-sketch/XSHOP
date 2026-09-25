@@ -1,0 +1,42 @@
+# X-SHOP — nunca al repositorio (auditoría de seguridad F12)
+# BD local: hashes bcrypt, tokens HMAC de sesión, last4 de tarjetas y
+# historial de transacciones. El .gitignore raíz no la cubría (verificado
+# con git check-ignore → exit 1), así que se protege aquí de forma local.
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/prisma/*.db-wal
+backend/prisma/*.db-shm
+backend/prisma/*.sqlite
+# Secretos (doble red junto al .gitignore raíz):
+.env
+.env.*
+!.env.example
+!**/.env.example
+backend/.env
+
+# Dependencias y artefactos locales
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+coverage/
+*.log
+*.tsbuildinfo
+
+# Android/Capacitor
+android/.gradle/
+android/build/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+*.keystore
+*.jks
+
+# Datos locales y herramientas
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+.DS_Store
+

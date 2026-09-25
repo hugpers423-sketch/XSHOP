@@ -1,0 +1,37 @@
+{
+  "name": "X-STORE",
+  "short_name": "X-STORE",
+  "description": "Social Commerce inmersivo: Reels, Live Shopping y Marketplace en Perú",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#05060a",
+  "theme_color": "#05060a",
+  "lang": "es-PE",
+  "dir": "ltr",
+  "categories": ["shopping", "entertainment", "social"],
+  "icons": [
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Reels",
+      "short_name": "Reels",
+      "url": "/reels",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Marketplace cerca",
+      "short_name": "Cerca",
+      "url": "/marketplace",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Mi carrito",
+      "short_name": "Carrito",
+      "url": "/cart",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   X-STORE — Global styles (Dark mode / glassmorphism / neon)
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-zinc-950 text-white antialiased;
+  font-feature-settings: 'cv02', 'cv03', 'cv04';
+  overscroll-behavior-y: none;
+}
+
+/* Scrollbar oculta en el feed de reels */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glassmorphism utilitario */
+.glass {
+  @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+}
+
+.glass-strong {
+  @apply border border-white/15 bg-white/10 backdrop-blur-2xl;
+}
+
+/* Neón para CTAs */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
+}
+
+.glow-violet {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+}
+
+/* Accesibilidad: foco visible siempre */
+*:focus-visible {
+  @apply outline-none ring-2 ring-cyan-400 ring-offset-2 ring-offset-zinc-950;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Safe area helpers (iPhone notch) */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Line clamp fallback */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============ Marquee EN VIVO (home) ============ */
+@keyframes xs-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.xs-marquee {
+  animation: xs-marquee 32s linear infinite;
+  will-change: transform;
+}
+/* Pausa al pasar el cursor (accesible e interactivo) */
+.xs-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Barra de progreso de oferta flash con pulso sutil */
+@keyframes xs-progress-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.xs-progress {
+  animation: xs-progress-pulse 2.2s ease-in-out infinite;
+}
+
+/* Barra de progreso de escenas de la silueta del celular (lectura calmada) */
+@keyframes xs-scene-progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.xs-scene-progress {
+  animation: xs-scene-progress 8s linear forwards;
+  will-change: transform;
+}

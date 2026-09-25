@@ -1,0 +1,7 @@
+# Override local de X-STORE (aditivo — no modifica docker-compose.yml)
+# El puerto5432 del host lo usa zuñistream-db (otro proyecto, intocable),
+# así que el Postgres de X-STORE publica en el5433.
+services:
+  postgres:
+    ports: !override
+      - "5433:5432"

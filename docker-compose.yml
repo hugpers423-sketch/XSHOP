@@ -1,0 +1,77 @@
+# Infraestructura local — X-STORE
+# PostgreSQL + Redis + MinIO (S3) + NATS + Typesense
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: xstore-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: xstore
+      POSTGRES_PASSWORD: xstore_secret_change_me
+      POSTGRES_DB: xstore
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xstore"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: xstore-redis
+    restart: unless-stopped
+    command: redis-server --requirepass xstore_redis_pass --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "xstore_redis_pass", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: xstore-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: xstore_minio
+      MINIO_ROOT_PASSWORD: xstore_minio_secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  nats:
+    image: nats:alpine
+    container_name: xstore-nats
+    restart: unless-stopped
+    command: ["-js", "-m", "8222"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+  typesense:
+    image: typesense/typesense:27.1
+    container_name: xstore-typesense
+    restart: unless-stopped
+    environment:
+      TYPESENSE_API_KEY: xstore_ts_key_change_me
+      TYPESENSE_DATA_DIR: /data
+    ports:
+      - "8108:8108"
+    volumes:
+      - tsdata:/data
+
+volumes:
+  pgdata:
+  redisdata:
+  miniodata:
+  tsdata:

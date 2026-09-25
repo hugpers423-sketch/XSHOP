@@ -1,0 +1,19 @@
+# Reverse proxy TLS para X-STORE. Caddy solicita y renueva el certificado
+# automáticamente cuando XSHOP_DOMAIN apunta al servidor.
+{$XSHOP_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+
+	# Socket.IO debe llegar al backend Express; el resto de /api y la UI
+	# pertenecen al servidor Next.js.
+	@socket path /socket.io/*
+	reverse_proxy @socket {$BACKEND_UPSTREAM:backend:3001}
+	reverse_proxy * {$WEB_UPSTREAM:web:3200}
+}

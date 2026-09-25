@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="description" content="X-SHOP: Social Commerce unificado. Live shopping, marketplace y reputación en una app.">
+  <!-- Modo app nativa al "Añadir a inicio" (iOS/Android): sin barra de navegador.
+       iOS además necesita apple-touch-icon en PNG (ignora el favicon SVG). -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="X-SHOP">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="/icons/icon-180.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="X-SHOP — Vende en vivo, crece rápido">
+  <meta property="og:description" content="La primera súper-app de Social Commerce en Perú. Live streaming, feed algorítmico y reputación verificada.">
+  <meta property="og:image" content="/og-image.png">
+  <meta property="og:site_name" content="X-SHOP">
+  <meta property="og:locale" content="es_PE">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="X-SHOP — Vende en vivo, crece rápido">
+  <meta name="twitter:description" content="La primera súper-app de Social Commerce en Perú: live streaming, feed algorítmico y reputación verificada.">
+  <link rel="preload" href="/styles/critical.css" as="style">
+  <link rel="stylesheet" href="/styles/critical.css">
+  <!-- CSS secundario sin bloquear el render: se descarga como media="print"
+       y app.js lo activa a "all" al cargar. SIN onload=… porque la CSP
+       (script-src con hash) prohíbe los handlers inline — F14. -->
+  <link rel="stylesheet" href="/styles/components.css" media="print" data-media-swap>
+  <link rel="stylesheet" href="/styles/layout.css" media="print" data-media-swap>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%2300d4aa' width='100' height='100' rx='20'/><text x='50' y='65' text-anchor='middle' fill='%230a0a0a' font-size='50' font-weight='bold'>X</text></svg>">
+  <script>
+    (function() {
+      try { var theme = localStorage.getItem('theme') || 'dark'; document.documentElement.dataset.theme = theme; } catch(e) {}
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          // Producción (https): registrar el SW con su caché.
+          // Desarrollo (http): desregistrar cualquier SW previo y limpiar
+          // todas las cachés para servir siempre código fresco (evita
+          // quedarse con assets viejos durante las iteraciones).
+          if (location.protocol === 'https:') {
+            navigator.serviceWorker.register('/sw.js').catch(function() {});
+          } else {
+            navigator.serviceWorker.getRegistrations().then(function(rs) {
+              rs.forEach(function(r) { r.unregister(); });
+            }).catch(function() {});
+            if (window.caches) {
+              caches.keys().then(function(ks) {
+                ks.forEach(function(k) { caches.delete(k); });
+              }).catch(function() {});
+            }
+          }
+        });
+      }
+    })();
+  </script>
+  <title>X-SHOP — Social Commerce Unificado</title>
+</head>
+<body>
+  <a href="#main" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- LANDING PAGE (hash #landing) -->
+  <section id="landing" class="landing page" role="region" aria-label="Página de inicio">
+    <header class="landing-header">
+      <nav class="nav container" aria-label="Navegación principal">
+        <a href="#landing" class="nav-brand" aria-label="X-SHOP Inicio">
+          <svg width="32" height="32" viewBox="0 0 100 100" aria-hidden="true"><rect fill="var(--color-primary)" width="100" height="100" rx="20"/><path d="M34 31 L66 65 M66 31 L34 65" stroke="var(--color-bg)" stroke-width="11" fill="none"/></svg>
+          <span>X-SHOP</span>
+        </a>
+        <div class="nav-actions">
+          <a href="#" class="btn btn-ghost" data-action="login">Ingresar</a>
+          <a href="#" class="btn btn-primary" data-action="register">Empezar a vender</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main" class="landing-main">
+      <!-- HERO -->
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <span class="hero-badge" data-animate="slide-up">Nuevo: Live Shopping + Marketplace</span>
+            <h1 id="hero-title" class="hero-title" data-animate="slide-up" style="animation-delay: 0.1s">
+              Vende en vivo.<br><span class="highlight">Convierte al instante.</span>
+            </h1>
+            <p class="hero-subtitle" data-animate="slide-up" style="animation-delay: 0.2s">
+              La primera plataforma que une streaming en vivo, feed algorítmico y reputación verificada.
+              Cero distracciones. Solo ventas.
+            </p>
+            <div class="hero-cta" data-animate="slide-up" style="animation-delay: 0.3s">
+              <a href="#" class="btn btn-primary btn-lg" data-cta="hero-primary" data-action="register">
+                <span>Crear mi tienda gratis</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <a href="#features" class="btn btn-ghost btn-lg" data-cta="hero-secondary">Ver cómo funciona</a>
+            </div>
+            <div class="hero-trust" data-animate="fade-in" style="animation-delay: 0.5s">
+              <div class="trust-item"><span class="trust-number" data-counter="50000">0</span><span class="trust-label">Vendedores</span></div>
+              <div class="trust-item"><span class="trust-number" data-counter="1200000">0</span><span class="trust-label">Productos</span></div>
+              <div class="trust-item"><span class="trust-number" data-counter="98">0</span><span class="trust-label">% Satisfacción</span></div>
+              <div class="trust-item"><span class="trust-number" data-counter="24">0</span><span class="trust-label">h Soporte</span></div>
+            </div>
+          </div>
+          <div class="hero-visual" data-animate="scale-in" style="animation-delay: 0.2s">
+            <div class="phone-mockup">
+              <div class="phone-frame">
+                <div class="phone-screen" id="hero-phone-screen"></div>
+              </div>
+              <div class="phone-glow"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-scroll-indicator" data-animate="bounce">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section id="features" class="features" aria-labelledby="features-title">
+        <div class="container">
+          <header class="section-header" data-animate="slide-up">
+            <span class="section-tag">¿Por qué X-SHOP?</span>
+            <h2 id="features-title" class="section-title">Todo para vender. Nada que distraiga.</h2>
+          </header>
+          <div class="features-grid">
+            <article class="feature-card card" data-animate="slide-up" style="animation-delay: 0.1s">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </div>
+              <h3>Live Shopping Nativo</h3>
+              <p>Transmite en vivo con overlay de productos. Tus espectadores compran sin salir del stream. Chat en tiempo real + fijación de ofertas.</p>
+            </article>
+            <article class="feature-card card" data-animate="slide-up" style="animation-delay: 0.2s">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
+              <h3>Feed Algorítmico de Ventas</h3>
+              <p>Videos cortos verticales con tarjetas de producto integradas. Scroll infinito, lazy loading, 1-clic para comprar.</p>
+            </article>
+            <article class="feature-card card" data-animate="slide-up" style="animation-delay: 0.3s">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              </div>
+              <h3>Reputación Verificada</h3>
+              <p>Sistema tipo MercadoLíder: nivel, score, tiempo de respuesta, tasa de completación. Genera confianza instantánea.</p>
+            </article>
+            <article class="feature-card card" data-animate="slide-up" style="animation-delay: 0.4s">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M2 14h20"/></svg>
+              </div>
+              <h3>Checkout Multi-Método</h3>
+              <p>Yape, Plin, tarjetas, transferencia. Tokenización segura. Webhooks automáticos. Conciliación instantánea.</p>
+            </article>
+            <article class="feature-card card" data-animate="slide-up" style="animation-delay: 0.5s">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <h3>Tiempo Real Puro</h3>
+              <p>WebSockets para chat, notificaciones, actualizaciones de stock. Sin polling. Latencia < 100ms.</p>
+            </article>
+            <article class="feature-card card" data-animate="slide-up" style="animation-delay: 0.6s">
+              <div class="feature-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <h3>Seguridad Bancaria</h3>
+              <p>CSP estricto, cert pinning, sanitización XSS, validación Luhn, rate limiting. Auditado OWASP.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOCIAL PROOF -->
+      <section class="social-proof" aria-labelledby="proof-title">
+        <div class="container">
+          <header class="section-header" data-animate="slide-up">
+            <span class="section-tag">Resultados reales</span>
+            <h2 id="proof-title" class="section-title">Vendedores que escalaron con X-SHOP</h2>
+          </header>
+          <div class="testimonials-track" id="testimonials-track" role="list">
+            <article class="testimonial card" role="listitem" data-animate="slide-up">
+              <div class="testimonial-stars" aria-label="5 de 5 estrellas">★★★★★</div>
+              <p class="testimonial-text">"Pasé de 20 pedidos/semana a 200 en el primer mes. El live shopping cambió todo."</p>
+              <footer class="testimonial-author">
+                <div class="avatar" style="background: hsl(180, 65%, 45%)">MC</div>
+                <div><strong>María C.</strong><span>Moda Lima • MercadoLíder</span></div>
+              </footer>
+            </article>
+            <article class="testimonial card" role="listitem" data-animate="slide-up" style="animation-delay: 0.1s">
+              <div class="testimonial-stars" aria-label="5 de 5 estrellas">★★★★★</div>
+              <p class="testimonial-text">"El feed algorítmico me trae compradores que no me buscaban. ROI 4x en ads."</p>
+              <footer class="testimonial-author">
+                <div class="avatar" style="background: hsl(280, 65%, 45%); color: #fff">JR</div>
+                <div><strong>Juan R.</strong><span>TechReviews PE • Gold</span></div>
+              </footer>
+            </article>
+            <article class="testimonial card" role="listitem" data-animate="slide-up" style="animation-delay: 0.2s">
+              <div class="testimonial-stars" aria-label="5 de 5 estrellas">★★★★★</div>
+              <p class="testimonial-text">"Gestión de reputación automática. Mis clientes confían antes de hablar conmigo."</p>
+              <footer class="testimonial-author">
+                <div class="avatar" style="background: hsl(45, 65%, 45%)">AK</div>
+                <div><strong>Ana K.</strong><span>Cocina Casera • Silver</span></div>
+              </footer>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA FINAL -->
+      <section class="cta-final" aria-labelledby="cta-title">
+        <div class="container">
+          <div class="cta-card card" data-animate="scale-in">
+            <h2 id="cta-title" class="cta-title">¿Listo para vender diferente?</h2>
+            <p class="cta-subtitle">Regístrate gratis. Sin tarjeta. Cancela cuando quieras.</p>
+            <a href="#" class="btn btn-primary btn-xl" data-cta="final" data-action="register">
+              <span>Crear mi tienda ahora</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <p class="cta-note">Primeras 50 tiendas: 0% comisión de por vida</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="landing-footer" role="contentinfo">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <a href="#landing" class="nav-brand" aria-label="X-SHOP Inicio">
+              <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true"><rect fill="var(--color-primary)" width="100" height="100" rx="20"/><path d="M35 32 L65 61 M65 32 L35 61" stroke="var(--color-bg)" stroke-width="10" fill="none"/></svg>
+              <span>X-SHOP</span>
+            </a>
+            <p>Social Commerce unificado para Perú. Live shopping, marketplace y reputación en una app.</p>
+          </div>
+          <nav class="footer-nav" aria-label="Enlaces principales">
+            <h3>Producto</h3>
+            <ul><li><a href="#features">Características</a></li><li><a href="#" data-action="register">Precios</a></li><li><a href="#app">Demo</a></li><li><a href="#" data-action="register">API</a></li></ul>
+          </nav>
+          <nav class="footer-nav" aria-label="Empresa">
+            <h3>Empresa</h3>
+            <ul><li><a href="#">Nosotros</a></li><li><a href="#">Blog</a></li><li><a href="#">Carreras</a></li><li><a href="#">Prensa</a></li></ul>
+          </nav>
+          <nav class="footer-nav" aria-label="Legal">
+            <h3>Legal</h3>
+            <ul><li><a href="#">Privacidad</a></li><li><a href="#">Términos</a></li><li><a href="#">Cookies</a></li><li><a href="#">Seguridad</a></li></ul>
+          </nav>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2025 X-SHOP. Hecho en Perú 🇵🇪</p>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <!-- APP SHELL (hash #app) -->
+  <section id="app" class="app-shell page" role="region" aria-label="Dashboard principal" hidden>
+    <header class="app-header" role="banner">
+      <div class="container app-header-inner">
+        <a href="#app" class="app-brand" aria-label="X-SHOP Dashboard">
+          <svg width="28" height="28" viewBox="0 0 100 100" aria-hidden="true"><rect fill="var(--color-primary)" width="100" height="100" rx="20"/><path d="M35 32 L65 61 M65 32 L35 61" stroke="var(--color-bg)" stroke-width="10" fill="none"/></svg>
+          <span>X-SHOP</span>
+        </a>
+        <nav class="app-tabs" role="tablist" aria-label="Módulos principales">
+          <button role="tab" aria-selected="true" aria-controls="payments-panel" id="tab-payments" class="tab tab--active" data-module="payments">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M2 14h20"/></svg>
+            Pagos
+          </button>
+          <button role="tab" aria-selected="false" aria-controls="feed-panel" id="tab-feed" class="tab" data-module="feed">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Feed
+          </button>
+          <button role="tab" aria-selected="false" aria-controls="reputation-panel" id="tab-reputation" class="tab" data-module="reputation">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Reputación
+          </button>
+        </nav>
+        <div class="app-user-menu">
+          <button class="btn btn-ghost" id="user-menu-btn" aria-expanded="false" aria-haspopup="true">
+            <span class="avatar" id="header-avatar">U</span>
+            <span class="user-name" id="header-user-name">Usuario</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="dropdown" id="user-dropdown" role="menu" hidden>
+            <a href="#" class="dropdown-item" role="menuitem" data-action="profile">Mi perfil</a>
+            <a href="#" class="dropdown-item" role="menuitem" data-action="settings">Configuración</a>
+            <hr>
+            <button class="dropdown-item btn-text" role="menuitem" data-action="logout">Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="app-main" role="main">
+      <section role="tabpanel" id="payments-panel" aria-labelledby="tab-payments" class="app-panel app-panel--active" data-module="payments">
+        <div class="container">
+          <div class="payments-container" id="payments-app"></div>
+        </div>
+      </section>
+      <section role="tabpanel" id="feed-panel" aria-labelledby="tab-feed" class="app-panel" data-module="feed">
+        <div class="container">
+          <div class="feed-container" id="feed-app"></div>
+        </div>
+      </section>
+      <section role="tabpanel" id="reputation-panel" aria-labelledby="tab-reputation" class="app-panel" data-module="reputation">
+        <div class="container">
+          <div class="reputation-container" id="reputation-app"></div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- MODAL PORTAL -->
+  <div id="modal-portal"></div>
+
+  <script type="module" src="/src/app.js"></script>
+</body>
+</html>
