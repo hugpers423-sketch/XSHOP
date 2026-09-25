@@ -24,6 +24,9 @@ coverage/
 *.log
 *.tsbuildinfo
 
+# Videos subidos por vendedores (almacenamiento local, nunca al repo)
+apps/web/uploads/
+
 # Android/Capacitor
 android/.gradle/
 android/build/

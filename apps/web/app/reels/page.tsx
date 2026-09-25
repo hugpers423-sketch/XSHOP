@@ -3,6 +3,7 @@
 
 // Página Reels — feed TikTok-style con compra rápida al carrito real
 
+import { useEffect, useState } from 'react';
 import { ReelsFeed } from '@/components/reels/ReelsFeed';
 import { useCartStore } from '@/lib/cart';
 import { track } from '@/lib/analytics';
@@ -61,10 +62,32 @@ const REELS: Reel[] = [
 
 export default function ReelsPage() {
   const addItem = useCartStore((s) => s.addItem);
+  // Los Reels demo siguen siendo la base; los videos subidos por vendedores
+  // se agregan al inicio cuando la API responde.
+  const [reels, setReels] = useState<Reel[]>(REELS);
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const response = await fetch('/api/videos?limit=24', { cache: 'no-store' });
+        if (!response.ok) return;
+        const body = (await response.json()) as { data?: unknown };
+        if (!alive || !Array.isArray(body.data)) return;
+        const uploaded = body.data.filter(isReel).slice(0, 24);
+        if (uploaded.length > 0) setReels([...uploaded, ...REELS]);
+      } catch {
+        // Sin API o sin videos: el feed continúa con los Reels demo.
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // Agrega la variante seleccionada del reel al carrito global
   const handleAddToCart = (reelId: string, variantId: string, qty: number) => {
-    const reel = REELS.find((r) => r.id === reelId);
+    const reel = reels.find((r) => r.id === reelId);
     if (!reel) return;
     const variant = reel.product.variants.find((v) => v.id === variantId);
     const price = variant?.price ?? reel.product.price;
@@ -84,5 +107,18 @@ export default function ReelsPage() {
     toast.success(`"${reel.product.title}" añadido al carrito 🛒`);
   };
 
-  return <ReelsFeed reels={REELS} onAddToCart={handleAddToCart} />;
+  return <ReelsFeed reels={reels} onAddToCart={handleAddToCart} />;
+}
+
+/** Validación defensiva: la API es red y no puede asumirse fiel. */
+function isReel(value: unknown): value is Reel {
+  if (!value || typeof value !== 'object') return false;
+  const reel = value as Partial<Reel>;
+  return (
+    typeof reel.id === 'string' &&
+    typeof reel.videoUrl === 'string' &&
+    typeof reel.caption === 'string' &&
+    Boolean(reel.product) &&
+    typeof reel.product?.title === 'string'
+  );
 }

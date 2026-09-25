@@ -92,6 +92,12 @@ export default function SellerPortalPage() {
             📡 Abrir estudio de live
           </Link>
           <Link
+            href="/seller/reels/new"
+            className="rounded-xl border border-violet-400/30 bg-violet-500/10 px-4 py-2.5 text-sm font-bold text-white transition hover:border-violet-300/60 hover:bg-violet-500/20"
+          >
+            🎬 Subir reel
+          </Link>
+          <Link
             href="/seller/products/new"
             className="rounded-xl bg-gradient-to-r from-[#FF2D75] to-[#7B5CFF] px-5 py-2.5 text-sm font-bold text-white"
           >
