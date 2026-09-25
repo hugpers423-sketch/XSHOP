@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import { LivePlayer } from '@/components/live/LivePlayer';
 import { LiveChat } from '@/components/live/LiveChat';
 import { LiveGame } from '@/components/live/LiveGame';
+import { LiveCommercePanel } from '@/components/live/LiveCommercePanel';
 import { PinnedProductCard, type PinnedProduct } from '@/components/live/PinnedProductCard';
 import { useLiveRoom } from '@/lib/realtime';
 import { formatCount, emojiTile } from '@/lib/format';
@@ -271,8 +272,19 @@ export default function LivePage() {
           </div>
         </div>
 
-        {/* Juego en vivo + chat lateral (compradores juegan, el host lanza preguntas) */}
+        {/* Panel del vendedor + juego en vivo + chat lateral */}
         <div className="flex flex-col gap-3 lg:h-[78vh] lg:overflow-hidden">
+          <LiveCommercePanel
+            stream={{
+              id: active.id,
+              title: active.title,
+              hostName: active.hostName,
+              viewers: viewers || active.viewers,
+              category: active.category,
+              productName: active.productName ?? pinned?.title ?? null,
+              productPrice: active.productPrice ?? pinned?.price ?? null,
+            }}
+          />
           <LiveGame hostQuestionSignal={hostQuestionSignal} />
           <div className="h-[52vh] min-h-[320px] lg:h-auto lg:min-h-0 lg:flex-1">
             <LiveChat comments={comments} onSend={comment} onRequireAuth={requireAuth} connected={connected} />

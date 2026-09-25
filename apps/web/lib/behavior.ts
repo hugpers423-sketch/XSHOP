@@ -48,12 +48,18 @@ export function getRecommendationScores(reelIds: string[]): Map<string, number> 
 }
 
 /** Ordena el feed localmente; el backend puede sustituir esta función sin cambiar la UI. */
-export function rankReels(reels: Reel[]): Reel[] {
+export function rankReels(reels: Reel[], interests: string[] = []): Reel[] {
   if (typeof window === 'undefined' || reels.length < 2) return reels;
   const originalIndex = new Map(reels.map((reel, index) => [reel.id, index]));
   const scores = getRecommendationScores(reels.map((reel) => reel.id));
+  const normalizedInterests = interests.map((interest) => interest.trim().toLowerCase()).filter(Boolean);
+  const interestBoost = (reel: Reel) => {
+    if (normalizedInterests.length === 0) return 0;
+    const searchable = `${reel.caption} ${reel.hashtags.join(' ')}`.toLowerCase();
+    return normalizedInterests.some((interest) => searchable.includes(interest)) ? 8 : 0;
+  };
   return [...reels].sort((a, b) => {
-    const scoreDiff = (scores.get(b.id) || 0) - (scores.get(a.id) || 0);
+    const scoreDiff = (scores.get(b.id) || 0) + interestBoost(b) - ((scores.get(a.id) || 0) + interestBoost(a));
     return scoreDiff || (originalIndex.get(a.id) || 0) - (originalIndex.get(b.id) || 0);
   });
 }

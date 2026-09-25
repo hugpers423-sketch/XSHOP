@@ -3,11 +3,13 @@
 
 import { ReelItem } from './ReelItem';
 import { LiveNowRail } from './LiveNowRail';
+import { FeedPersonalizationBar } from './FeedPersonalizationBar';
 import { CommentsBubble } from './CommentsBubble';
 import { QuickBuySheet } from './QuickBuySheet';
 import { useReelsFeed } from './useReelsFeed';
 import { useAuth } from '@/lib/auth-context';
 import { recordBehavior } from '@/lib/behavior';
+import { useCallback, useState } from 'react';
 import type { Reel } from './types';
 
 interface ReelsFeedProps {
@@ -16,7 +18,11 @@ interface ReelsFeedProps {
 }
 
 export function ReelsFeed({ reels, onAddToCart }: ReelsFeedProps) {
-  const feed = useReelsFeed(reels);
+  // "Para ti": los intereses solo ajustan el orden local; no borra ni reemplaza el feed.
+  const [interests, setInterests] = useState<string[]>([]);
+  const handleInterests = useCallback((next: string[]) => setInterests(next), []);
+
+  const feed = useReelsFeed(reels, interests);
   const { requireAuth } = useAuth();
 
   const handleShare = (reel: Reel) => {
@@ -40,6 +46,7 @@ export function ReelsFeed({ reels, onAddToCart }: ReelsFeedProps) {
   return (
     <>
       <LiveNowRail />
+      <FeedPersonalizationBar interests={interests} onChange={handleInterests} />
       <main
         className="h-[100dvh] w-full snap-y snap-mandatory overflow-y-auto overscroll-y-contain"
         aria-label="Feed de videos de productos"

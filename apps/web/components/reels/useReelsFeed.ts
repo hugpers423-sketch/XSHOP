@@ -28,8 +28,8 @@ function writeFollowing(ids: Set<string>): void {
   }
 }
 
-export function useReelsFeed(reels: Reel[]) {
-  const rankedReels = useMemo(() => rankReels(reels), [reels]);
+export function useReelsFeed(reels: Reel[], interests: string[] = []) {
+  const rankedReels = useMemo(() => rankReels(reels, interests), [interests, reels]);
   const [state, setState] = useState<ReelsFeedState>({
     reels: rankedReels,
     activeIndex: 0,
