@@ -34,6 +34,17 @@ const allowedOrigins = Array.from(new Set([
 
 app.disable('x-powered-by');
 
+// La API nunca se expone directamente: siempre hay un proxy inverso delante
+// (Tailscale Funnel en desarrollo, Caddy en produccion) y este proceso escucha
+// en 127.0.0.1. Sin esto, Express ignora X-Forwarded-For, todas las peticiones
+// sharean la IP del proxy y el rate limit por IP se vuelve inútil: un unico
+// atacante podria bloquear a todos los usuarios a la vez.
+//
+// `1` = confiar en exactamente un salto. Nunca usar `true`: si el backend
+// llegara a exponerse sin proxy, cualquier cliente podria falseificar la
+// cabecera y saltarse los limites.
+app.set('trust proxy', 1);
+
 app.use(helmet({
   contentSecurityPolicy: false, // la CSP aplica al HTML, lo sirve serve.mjs (:3000)
   crossOriginEmbedderPolicy: false,
