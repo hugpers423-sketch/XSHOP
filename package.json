@@ -14,6 +14,7 @@
     "dev": "pnpm run frontend",
     "web:build": "pnpm --filter @xstore/web build",
     "web:typecheck": "pnpm --filter @xstore/web typecheck",
+    "web:serve": "pnpm --filter @xstore/web start",
     "build": "pnpm run web:build",
     "build:capacitor": "node scripts/build-capacitor.js",
     "apk:sync": "cap sync android",

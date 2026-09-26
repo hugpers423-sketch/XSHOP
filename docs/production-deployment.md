@@ -108,3 +108,43 @@ No se aceptar PAN, CVC, claves Yape ni capturas como campos de tarjeta. Las prue
 - [ ] Order sobrevive a reinicios y no duplica con `Idempotency-Key`
 - [ ] WhatsApp abre con el número correcto
 - [ ] No se generan APK hasta aprobación de la web
+
+## 8. Demo local y APK (túnel Tailscale)
+
+La APK es un contenedor WebView que carga la app real desde la URL pública.
+No es una copia autonomous: necesita que el servidor responda.
+
+### Servidor: usar build de producción, nunca `next dev`
+
+Con `next dev` cada ruta se compila en la primera peticion. Medido a traves
+del tunel publico: `/reels` tardaba **90 s o mas** y el WebView del telefono
+abandonaba la carga, mostrando la pantalla de "Sin conexion" aunque el servidor
+estuviera bien. Con el build de produccion la misma ruta responde en **0.13 s**.
+
+```bash
+# 1) compilar con las variables publicas ya fijadas
+$env:NEXT_PUBLIC_SOCKET_URL='https://crearsoft.taile07cfb.ts.net:8443'
+$env:NEXT_PUBLIC_APP_URL='https://crearsoft.taile07cfb.ts.net'
+$env:GOOGLE_REDIRECT_URI='https://crearsoft.taile07cfb.ts.net/api/auth/google/callback'
+pnpm run build
+
+# 2) servir la build (NO next dev)
+pnpm run web:serve
+```
+
+No se deben ejecutar `next dev` y `next build` a la vez: comparten la carpeta
+`.next` y el dev queda sirviendo bundles viejos.
+
+### Comportamiento sin conexion
+
+`server.errorPath` en `capacitor.config.ts` hace que Capacitor muestre
+`mobile/index.html` (pantalla de marca) en vez de la pagina de error de
+Chromium. `allowNavigation` evita que esa pantalla abra el navegador del
+sistema al reintentar. La pantalla NO reintenta sola en bucle: solo al pulsar
+el boton o cuando el dispositivo recupera la red.
+
+### Limitacion conocida
+
+Si la computadora que aloja el servidor esta apagada, la APK muestra "Sin
+conexion". Para que la APK funcione sin esta PC hace falta desplegar web +
+backend + PostgreSQL + Redis en un hosting siempre activo (ver `render.yaml`).

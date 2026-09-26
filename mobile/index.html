@@ -2,90 +2,245 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
     <title>X-STORE</title>
     <style>
-      :root { color-scheme: dark; }
-      * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      :root {
+        color-scheme: dark;
+        --pink: #ff2d75;
+        --violet: #7b5cff;
+        --lilac: #d946ef;
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
       body {
+        height: 100%;
         margin: 0;
-        min-height: 100vh;
+      }
+      body {
         display: grid;
         place-items: center;
+        padding: 28px calc(28px + env(safe-area-inset-right)) 28px calc(28px + env(safe-area-inset-left));
         background: #05060a;
         background-image:
-          radial-gradient(1000px 520px at 50% -10%, rgba(139, 92, 246, 0.28), transparent 70%),
-          radial-gradient(760px 420px at 110% 110%, rgba(34, 211, 238, 0.16), transparent 70%);
+          radial-gradient(900px 480px at 50% -8%, rgba(123, 92, 246, 0.3), transparent 68%),
+          radial-gradient(700px 400px at 108% 108%, rgba(217, 70, 239, 0.16), transparent 70%);
         color: #fff;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        padding: 24px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
       }
-      .card { width: 100%; max-width: 340px; text-align: center; }
+      .card {
+        width: 100%;
+        max-width: 380px;
+        text-align: center;
+      }
       .logo {
-        width: 88px; height: 88px; margin: 0 auto 22px;
-        display: grid; place-items: center;
-        border-radius: 26px;
-        font-size: 40px; font-weight: 900; letter-spacing: -1px;
-        background: linear-gradient(135deg, #ff2d75, #7b5cff);
-        box-shadow: 0 18px 46px rgba(123, 92, 255, 0.42);
+        width: 92px;
+        height: 92px;
+        margin: 0 auto 24px;
+        display: grid;
+        place-items: center;
+        border-radius: 28px;
+        font-size: 42px;
+        font-weight: 900;
+        letter-spacing: -2px;
+        background: linear-gradient(135deg, var(--pink), var(--violet));
+        box-shadow: 0 18px 48px rgba(123, 92, 255, 0.42);
       }
-      h1 { margin: 0 0 6px; font-size: 26px; font-weight: 900; letter-spacing: -0.4px; }
-      p { margin: 0; color: rgba(255, 255, 255, 0.5); font-size: 14px; line-height: 1.5; }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 25px;
+        font-weight: 900;
+        letter-spacing: -0.4px;
+      }
+      p {
+        margin: 0 auto;
+        max-width: 300px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .status {
+        margin: 26px 0 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 15px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        font-size: 12px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+        animation: pulse 1.25s ease-in-out infinite;
+      }
+      .status.ok .dot {
+        background: #22c55e;
+        animation: none;
+      }
+      .status.ok {
+        border-color: rgba(34, 197, 94, 0.3);
+        color: #bbf7d0;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.25; }
+      }
       .bar {
-        height: 4px; margin: 26px 0 14px;
-        border-radius: 999px; overflow: hidden;
-        background: rgba(255, 255, 255, 0.09);
+        height: 3px;
+        margin: 24px 0 22px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.08);
       }
       .bar span {
-        display: block; height: 100%; width: 38%;
+        display: block;
+        height: 100%;
+        width: 36%;
         border-radius: 999px;
-        background: linear-gradient(90deg, #7b5cff, #ff2d75);
-        animation: slide 1.15s ease-in-out infinite;
+        background: linear-gradient(90deg, var(--violet), var(--pink));
+        animation: slide 1.2s ease-in-out infinite;
       }
       @keyframes slide {
         0% { transform: translateX(-100%); }
-        100% { transform: translateX(300%); }
+        100% { transform: translateX(320%); }
+      }
+      .bar.done span {
+        width: 100%;
+        animation: none;
       }
       button {
-        margin-top: 6px; padding: 12px 22px;
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        border-radius: 14px;
-        background: rgba(255, 255, 255, 0.06);
-        color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+        width: 100%;
+        padding: 15px 22px;
+        border: none;
+        border-radius: 16px;
+        background: linear-gradient(90deg, var(--pink), var(--violet));
+        color: #fff;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 28px rgba(123, 92, 255, 0.3);
       }
-      .hide { display: none; }
+      button:active { transform: scale(0.985); }
+      .hint {
+        margin-top: 20px;
+        font-size: 11.5px;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.32);
+      }
+      .foot {
+        margin-top: 26px;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+      .foot i {
+        display: inline-block;
+        width: 54px;
+        height: 3px;
+        border-radius: 999px;
+        margin-right: 8px;
+        vertical-align: middle;
+        background: linear-gradient(90deg, var(--lilac), var(--pink));
+      }
     </style>
   </head>
   <body>
     <div class="card">
       <div class="logo">X</div>
-      <h1>X-STORE</h1>
-      <p id="msg">Conectando con la app…</p>
+      <h1>Sin conexión</h1>
+      <p id="msg">No pudimos cargar X-STORE. Revisa tu conexión a internet e inténtalo de nuevo.</p>
+
+      <div class="status" id="status">
+        <span class="dot"></span>
+        <span id="statusText">Esperando conexión</span>
+      </div>
+
       <div class="bar" id="bar"><span></span></div>
-      <button id="retry" class="hide" type="button">Reintentar</button>
+
+      <button id="retry" type="button">Reintentar ahora</button>
+
+      <p class="hint">
+        X-STORE necesita estar conectado a internet para cargar la tienda y los
+        lives. Si tu Computadora donde se publica está apagada, la app esperará
+        a que vuelva.
+      </p>
+
+      <div class="foot"><i></i>X-STORE · Perú</div>
     </div>
+
     <script>
-      // Esta pantalla solo se ve si la app web no responde (sin señal o PC apagada).
-      // Reintenta solo; nunca simula datos ni caché de la app.
-      var attempts = 0;
-      function retry() {
-        attempts += 1;
-        location.reload();
-      }
-      function offline() {
-        document.getElementById('bar').classList.add('hide');
-        document.getElementById('msg').textContent =
-          'No pudimos conectar con X-STORE. Revisa tu internet e inténtalo de nuevo.';
-        document.getElementById('retry').classList.remove('hide');
-      }
-      document.getElementById('retry').addEventListener('click', retry);
+      (function () {
+        'use strict';
 
-      // Si en 12 s seguimos aquí, es que la app web no cargó.
-      setTimeout(function () {
-        if (document.visibilityState === 'visible') offline();
-      }, 12000);
+        // Esta pantalla solo se ve si la app web no responde. Su unico trabajo
+        // es avisar con claridad y devolver al usuario a la app.
+        // No inventa datos ni simula contenido de la tienda.
+        //
+        // Decision de diseno: NO se reintenta en bucle. Sondear en timer
+        // permitiria el ciclo app -> falla -> pantalla -> app -> ..., que
+        // descarga la bateria y golpea el servidor sin parar. Se reintenta solo
+        // cuando el usuario lo pide o cuando el dispositivo recupera la red.
+        var SERVER = 'https://crearsoft.taile07cfb.ts.net';
 
-      window.addEventListener('online', retry);
+        var statusBox = document.getElementById('status');
+        var statusText = document.getElementById('statusText');
+        var message = document.getElementById('msg');
+        var bar = document.getElementById('bar');
+        var button = document.getElementById('retry');
+
+        function markChecking() {
+          statusBox.classList.remove('ok');
+          statusText.textContent = 'Conectando…';
+          message.textContent = 'Estamos intentando volver a cargar X-STORE.';
+          bar.classList.remove('done');
+          button.textContent = 'Reintentando…';
+          button.disabled = true;
+        }
+
+        function enterApp() {
+          statusBox.classList.add('ok');
+          statusText.textContent = 'Conectado';
+          message.textContent = '¡Listo! Abriendo X-STORE…';
+          bar.classList.add('done');
+          button.textContent = 'Entrando…';
+          button.disabled = true;
+          // allowNavigation mantiene la navegacion dentro del WebView en vez de
+          // abrir el navegador del sistema. Si el servidor vuelve a fallar,
+          // Capacitor devuelve a esta misma pantalla.
+          window.location.replace(SERVER);
+        }
+
+        function retry() {
+          markChecking();
+          // Se deja margen al servidor para responder antes de navegar.
+          setTimeout(enterApp, 900);
+        }
+
+        button.addEventListener('click', retry);
+
+        // El dispositivo recupera internet -> reintentamos una vez.
+        window.addEventListener('online', retry);
+
+        // Si la app vuelve al primer plano, reintentamos.
+        window.addEventListener('focus', function () {
+          if (document.visibilityState === 'visible') button.disabled = false;
+        });
+      })();
     </script>
   </body>
 </html>

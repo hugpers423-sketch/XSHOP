@@ -14,6 +14,7 @@ import path from 'node:path';
  * no responde, el usuario ve un mensaje claro en vez de una pantalla en blanco.
  */
 const SERVER_URL = process.env.CAPACITOR_SERVER_URL || 'https://crearsoft.taile07cfb.ts.net';
+const SERVER_HOST = new URL(SERVER_URL).host;
 const KEYSTORE_PATH = path.resolve(__dirname, 'release-key.keystore');
 
 const config: CapacitorConfig = {
@@ -25,6 +26,15 @@ const config: CapacitorConfig = {
     // Sin esquema http: la app necesita contexto seguro para cámara, micrófono,
     // service worker y cookies de sesión.
     cleartext: false,
+
+    // Si el servidor no responde, Capacitor navega a esta ruta local en vez de
+    // mostrar la pantalla de error cruda de Chromium. Es el "index.html" de
+    // webDir, que muestra la pantalla de reconexión de X-STORE.
+    errorPath: 'index.html',
+
+    // Necesario para que la pantalla de reconexion pueda volver a la app web
+    // sin que Capacitor la abra en el navegador del sistema.
+    allowNavigation: [SERVER_HOST],
   },
   android: {
     // La firma de release solo se configura si existe el keystore local.
