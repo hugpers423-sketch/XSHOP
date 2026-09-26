@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <!--
+      Color de respaldo. El icono adaptativo usa el degradado de
+      @drawable/ic_launcher_background; este color queda para launchesers
+      antiguos que solo saben leer un color plano.
+    -->
+    <color name="ic_launcher_background">#5B21B6</color>
 </resources>

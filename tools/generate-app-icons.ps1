@@ -117,24 +117,41 @@ $Adaptive = 432   # 108dp x 4
 $Safe = 288       # 72dp x 4
 $offset = [int](($Adaptive - $Safe) / 2)
 
-# Ojo: en PowerShell los nombres de variable NO distinguen mayusculas, asi que
-# el lienzo del foreground y su contexto de graficos usan nombres distintos.
+# ------------------------------------------------------------------
+# 2) Foreground adaptativo: solo la marca, sobre fondo transparente.
+#    El fondo lo aporta la capa `ic_launcher_background` (degradado de marca),
+#    que es como funcionan los iconos adaptativos: fondo + primer plano.
+# ------------------------------------------------------------------
+$Adaptive = 432   # 108dp x 4
+$Safe = 288       # 72dp x 4: zona que nunca recorta el launcher
+
 $Foreground = New-Bitmap $Adaptive $Adaptive
 $fgCanvas = [System.Drawing.Graphics]::FromImage($Foreground)
 $fgCanvas.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
 $fgCanvas.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+$fgCanvas.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAliasGridFit
 
-$fgBg = New-BrandBackground $Safe
-$clip = New-Object System.Drawing.Drawing2D.GraphicsPath
-[void]$clip.AddEllipse($offset, $offset, $Safe, $Safe)
-$fgCanvas.SetClip($clip)
-[void]$fgCanvas.DrawImage($fgBg, $offset, $offset, $Safe, $Safe)
-$fgCanvas.ResetClip()
-$fgBg.Dispose()
-$clip.Dispose()
+# "X" centrada en la zona segura, sin fondo.
+Draw-Logo $fgCanvas ($Adaptive / 2) 178 186 62 ([System.Drawing.Color]::White)
 
-Draw-Logo $fgCanvas ($Adaptive / 2) ($Adaptive / 2) 186 66 ([System.Drawing.Color]::White)
+# Subrayado de marca, tambien dentro de la zona segura.
+$barRect = New-Object System.Drawing.Rectangle(150, 280, 132, 14)
+$barBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush($barRect, $Lilac, $Pink, 0.0)
+[void]$fgCanvas.FillRectangle($barBrush, $barRect)
+$barBrush.Dispose()
 
+# Etiqueta de marca, pequena y legible. Debe caber ANTES del borde de la
+# zona segura (72..360), porque el launcher recorta con su mascara.
+$fgFont = New-Object System.Drawing.Font('Arial', 30, [System.Drawing.FontStyle]::Bold, [System.Drawing.GraphicsUnit]::Pixel)
+$fgText = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(240, 255, 255, 255))
+$fgFmt = New-Object System.Drawing.StringFormat
+$fgFmt.Alignment = [System.Drawing.StringAlignment]::Center
+$fgFmt.LineAlignment = [System.Drawing.StringAlignment]::Center
+$fgFmt.FormatFlags = [System.Drawing.StringFormatFlags]::NoWrap
+[void]$fgCanvas.DrawString('X-STORE', $fgFont, $fgText, (New-Object System.Drawing.RectangleF(0, 302, [single]$Adaptive, 40)), $fgFmt)
+$fgFont.Dispose()
+$fgText.Dispose()
+$fgFmt.Dispose()
 $fgCanvas.Dispose()
 
 # ------------------------------------------------------------------
