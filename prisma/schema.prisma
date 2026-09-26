@@ -73,6 +73,11 @@ model User {
   liveStreams     LiveStream[]
   sessions        Session[]
 
+  // Red social: a quién sigue y quién le sigue
+  following       Follow[]        @relation("Follower")
+  followers       Follow[]        @relation("Followed")
+  videoLikes      VideoLike[]
+
   @@index([role, status])
   @@index([latitude, longitude]) // búsquedas por radio
 }
@@ -212,8 +217,40 @@ model Video {
   status    String   @default("PROCESSING") // PROCESSING, READY, FAILED
   createdAt DateTime @default(now())
 
+  // Un like por usuario: permite saber QUIÉN gustó, no solo el contador.
+  videoLikes VideoLike[]
+
   @@index([authorId])
   @@index([status, createdAt(sort: Desc)]) // feed principal
+}
+
+// Un usuario sigue a un vendedor. Personal de una tienda: al seguir al autor
+// del video, se sigue al dueño del producto.
+model Follow {
+  id         String   @id @default(uuid())
+  followerId String
+  follower   User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followedId String
+  followed   User     @relation("Followed", fields: [followedId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([followerId, followedId])
+  @@index([followedId, createdAt(sort: Desc)]) // lista de seguidores del vendedor
+  @@index([followerId, createdAt(sort: Desc)])
+}
+
+// Like por usuario sobre un video. El contador Video.likes sigue siendo la
+// cifra pública; esta tabla guarda quién lo hizo, para no contar dos veces.
+model VideoLike {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId   String
+  video     Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, videoId])
+  @@index([videoId, createdAt(sort: Desc)])
 }
 
 // ============================================================

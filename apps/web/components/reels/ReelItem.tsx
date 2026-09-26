@@ -14,9 +14,11 @@ interface ReelItemProps {
   muted: boolean;
   isLiked: boolean;
   isFollowing: boolean;
+  isSaved: boolean;
   registerItem: (id: string, el: HTMLElement | null) => void;
   onToggleLike: () => void;
   onToggleFollow: () => void;
+  onToggleSave: () => void;
   onOpenComments: () => void;
   onShare: () => void;
   onQuickBuy: () => void;
@@ -66,8 +68,10 @@ export function ReelItem(props: ReelItemProps) {
         reel={reel}
         isLiked={props.isLiked}
         isFollowing={props.isFollowing}
+        isSaved={props.isSaved}
         onToggleLike={props.onToggleLike}
         onToggleFollow={props.onToggleFollow}
+        onToggleSave={props.onToggleSave}
         onOpenComments={props.onOpenComments}
         onShare={props.onShare}
         onQuickBuy={props.onQuickBuy}

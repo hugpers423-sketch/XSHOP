@@ -8,8 +8,10 @@ interface ReelOverlayProps {
   reel: Reel;
   isLiked: boolean;
   isFollowing: boolean;
+  isSaved: boolean;
   onToggleLike: () => void;
   onToggleFollow: () => void;
+  onToggleSave: () => void;
   onOpenComments: () => void;
   onShare: () => void;
   onQuickBuy: () => void;
@@ -21,7 +23,7 @@ const formatCount = (n: number) =>
   : String(n);
 
 export function ReelOverlay({
-  reel, isLiked, isFollowing, onToggleLike, onToggleFollow, onOpenComments, onShare, onQuickBuy,
+  reel, isLiked, isFollowing, isSaved, onToggleLike, onToggleFollow, onToggleSave, onOpenComments, onShare, onQuickBuy,
 }: ReelOverlayProps) {
   return (
     <>
@@ -53,6 +55,14 @@ export function ReelOverlay({
 
         <ActionButton label={formatCount(reel.stats.shares)} aria-label="Compartir" onClick={onShare}>
           <span className="text-white">↗</span>
+        </ActionButton>
+
+        <ActionButton
+          label={isSaved ? 'Guardado' : 'Guardar'}
+          aria-label={isSaved ? 'Quitar de tu lista' : 'Guardar en tu lista'}
+          onClick={onToggleSave}
+        >
+          <span className={isSaved ? 'text-amber-400' : 'text-white/70'}>🔖</span>
         </ActionButton>
       </div>
 

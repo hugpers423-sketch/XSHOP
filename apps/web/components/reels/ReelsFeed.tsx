@@ -9,6 +9,7 @@ import { QuickBuySheet } from './QuickBuySheet';
 import { useReelsFeed } from './useReelsFeed';
 import { useAuth } from '@/lib/auth-context';
 import { recordBehavior } from '@/lib/behavior';
+import { useWishlist } from '@/lib/wishlist';
 import { useCallback, useState } from 'react';
 import type { Reel } from './types';
 
@@ -24,6 +25,7 @@ export function ReelsFeed({ reels, onAddToCart }: ReelsFeedProps) {
 
   const feed = useReelsFeed(reels, interests);
   const { requireAuth } = useAuth();
+  const wishlist = useWishlist();
 
   const handleShare = (reel: Reel) => {
     recordBehavior(reel.id, 'share', 1);
@@ -62,9 +64,14 @@ export function ReelsFeed({ reels, onAddToCart }: ReelsFeedProps) {
             muted={feed.muted}
             isLiked={feed.likedIds.has(reel.id)}
             isFollowing={feed.followingIds.has(reel.product.seller.id)}
+            isSaved={wishlist.isSaved(reel.product.id)}
             registerItem={feed.registerItem}
             onToggleLike={() => { if (requireAuth('like')) feed.toggleLike(reel.id); }}
             onToggleFollow={() => { if (requireAuth('follow')) feed.toggleFollow(reel.product.seller.id); }}
+            onToggleSave={() => {
+              if (!requireAuth('buy')) return;
+              void wishlist.toggle(reel.product.id, reel.product.title);
+            }}
             onOpenComments={() => { if (requireAuth('comment')) feed.openComments(reel.id); }}
             onShare={() => handleShare(reel)}
             onQuickBuy={() => { if (requireAuth('buy')) feed.openQuickBuy(reel.id); }}

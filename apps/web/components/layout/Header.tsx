@@ -15,6 +15,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useCartStore } from '@/lib/cart';
 import { authLogout, type AuthUser } from '@/lib/api';
+import { NotificationBell } from './NotificationBell';
 
 const LINKS = [
   { href: '/reels', label: 'Reels', icon: '🎬' },
@@ -153,8 +154,10 @@ export function Header({ user }: HeaderProps) {
 
         {/* ===== Estado de sesión ===== */}
         {user ? (
-          /* DESPUÉS del login: X-Coins + menú de cuenta */
+          /* DESPUÉS del login: notificaciones + X-Coins + menú de cuenta */
           <div className="relative flex items-center gap-2">
+            <NotificationBell user={user} />
+
             <span className="hidden rounded-full border border-[#FFD166]/25 bg-[#FFD166]/10 px-3 py-1.5 text-xs font-black text-[#FFD166] xl:inline-block">
               🪙 {xCoins}
             </span>
@@ -210,6 +213,7 @@ export function Header({ user }: HeaderProps) {
                   <ul className="mt-1.5 space-y-0.5">
                     {[
                       { href: '/profile', label: '👤 Mi perfil' },
+                      { href: '/favoritos', label: '🔖 Mis guardados' },
                       { href: '/orders', label: '📦 Mis pedidos' },
                       ...(user.role === 'SELLER' || isAdmin
                         ? [{ href: '/seller', label: '🏪 Mi tienda' }]
