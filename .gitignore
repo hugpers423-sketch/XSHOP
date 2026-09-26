@@ -27,6 +27,10 @@ coverage/
 # Videos subidos por vendedores (almacenamiento local, nunca al repo)
 apps/web/uploads/
 
+# Binarios de distribucion Android (se generan con pnpm apk:build)
+*.apk
+*.aab
+
 # Android/Capacitor
 android/.gradle/
 android/build/
